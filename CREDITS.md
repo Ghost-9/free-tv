@@ -15,8 +15,8 @@
   `LIVE_TV_APPS`, `HIDDEN`.
 - Keyless **Popular on Netflix** rail: `NetflixRail.java`, using JustWatch's public popularity graph
   and the provider's `netflix.com/title/<id>` links.
-- Settings/`Scene` retention fix: one settings task, explicit `Scene.release()`, measured 101 → 191 MB
-  down to 77 → 97 MB over ten opens.
+- Settings/`Scene` retention fix: `:settings` process, explicit `Scene.release()`, process ended on exit; measured 101 → 191 MB
+  over ten opens before, 77 MB fresh / 64 MB after ten opens with the fix.
 - Transparent YouTube and SmartTube marks; ArtCraft branding, README, licence and sound lab.
 
 ## Data and assets

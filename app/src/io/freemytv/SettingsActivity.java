@@ -296,19 +296,13 @@ public class SettingsActivity extends Activity {
         /** Home screen picks: status, and the credit TMDB asks for. */
         private float drawRecs(Canvas c, float y) {
             float x = LIST_X * k + 30 * k;
-            c.drawText(Ui.tr("RECOMENDAÇÕES", "RECOMMENDATIONS"), x, y, header);
-            String line;
-            String error = recs.optString("error");
-            int count = recs.optInt("count");
-            if (!hasKey) line = Ui.tr("Sem chave do TMDB: veja o README (config.properties).", "No TMDB key: see the README (config.properties).");
-            else if (!error.isEmpty()) line = Ui.tr("Erro: ", "Error: ") + error + ".";
-            else if (count > 0) line = Ui.tr("Ligadas · " + count + " títulos nos apps da TV, 3 novos a cada hora.",
-                    "On · " + count + " titles from the TV's apps, 3 new ones every hour.");
-            else line = Ui.tr("Buscando os títulos…", "Fetching titles…");
+            c.drawText(Ui.tr("FAIXA DA NETFLIX", "NETFLIX RAIL"), x, y, header);
+            String line = Ui.tr("Popular na Netflix · 6 títulos · Índia · atualiza toda semana",
+                    "Popular on Netflix · 6 titles · India · refreshed weekly");
             c.drawText(TextUtils.ellipsize(line, notice, 790 * k, TextUtils.TruncateAt.END).toString(), x, y + 42 * k, notice);
             version.setTextAlign(Paint.Align.LEFT);
-            c.drawText(Ui.tr("Usa a API do TMDB, sem endosso ou certificação do TMDB.",
-                    "This product uses the TMDB API but is not endorsed or certified by TMDB."), x, y + 78 * k, version);
+            c.drawText(Ui.tr("Dados de popularidade: JustWatch. Abre o título na Netflix.",
+                    "Popularity data: JustWatch. Opens the title in Netflix."), x, y + 78 * k, version);
             version.setTextAlign(Paint.Align.CENTER);
             return y + 78 * k;
         }
@@ -453,7 +447,16 @@ public class SettingsActivity extends Activity {
                     if (screen == MAIN) {
                         // Leave the settings without destroying the window: a new task/window per open retained
                         // ~9 MB of graphics each time (measured: 101 → 191 MB over 10 opens). One instance is reused.
-                        if (!down) activity.moveTaskToBack(true);
+                        if (!down) {
+                            // Settings has its own process. Start HOME explicitly, then end the process: a
+                            // finished activity's window can stay in the process and retain ~9 MB each open.
+                            Intent home = new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME)
+                                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            activity.startActivity(home);
+                            release();
+                            activity.finish();
+                            android.os.Process.killProcess(android.os.Process.myPid());
+                        }
                         return true;
                     }
                     if (down) {

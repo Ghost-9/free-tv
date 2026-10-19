@@ -51,7 +51,7 @@
         <!-- The app's icon opens the settings (switch between Free My TV and the original home screen). -->
         <activity
             android:name=".SettingsActivity"
-            android:process=":home"
+            android:process=":settings"
             android:exported="true"
             android:label="ArtCraft Launcher"
             android:launchMode="singleTask"

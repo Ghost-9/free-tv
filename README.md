@@ -39,12 +39,12 @@ Same TV, same boot, Acer R10G (1.81 GiB RAM, Android 14, 1920×1080):
 
 | | Stock Google TV | ArtCraft (fresh) | ArtCraft after use |
 |---|---|---|---|
-| Home PSS | 151 MB | **127 MB** | 132 MB |
-| Graphics | 40 MB | 77 MB | 91 MB |
+| Home PSS | 151 MB | **129 MB** | 106 MB |
+| Graphics | 40 MB | 77 MB | 64 MB |
 | Frame p50 | 17 ms | 18 ms | — |
 | Packages off | 5 | **22** | 22 |
 
-The interesting number is the before/after of the settings retention: opening Settings used to add **+9 MB of graphics per open** (101 → 191 MB over ten opens). Keeping one settings instance and releasing the `Scene` bitmaps makes it **77 → 97 MB after ten opens, 91 MB after twenty** — flat. The full method and caveats are in [`FORK.md`](FORK.md).
+The interesting number is the before/after of the settings retention: opening Settings used to add **+9 MB of graphics per open** (101 → 191 MB over ten opens). Settings now runs in its own `:settings` process, releases its `Scene` bitmaps on exit, and ends that process; the home stays at **77 MB graphics fresh, 64 MB after ten opens** — no growth. The generic part of the fix is upstream as [simbasjungles/free-my-tv#1](https://github.com/simbasjungles/free-my-tv/pull/1). Full method and caveats: [`FORK.md`](FORK.md).
 
 > The home is already fast. The real constraint is 1.8 GB RAM and zram churn, not the launcher. We do not promise a faster CPU.
 
@@ -75,6 +75,12 @@ Netflix does not expose per-profile recommendations to third-party apps, and the
 - labelled **Popular on Netflix**, never "For You".
 
 If Netflix or JustWatch changes the endpoint, the rail falls back to its last cache and then to a quiet message; the rest of the home screen is unaffected.
+
+## Settings direction
+
+<img src="docs/artcraft/settings-design.png" width="880" alt="ArtCraft settings design: home, sound, motion, clock, Netflix, system">
+
+The agreed direction: one calm list, no dead rows. **Home**, **Screensaver**, **TV settings**; **Interface sound** (one of the ten in `sound-lab/`, off until chosen), **Motion** (full/reduced), **Clock**; **Netflix region/refresh**; **Apps off** and **Restore original**. The current build already ships Home, Screensaver, TV settings, the Netflix rail status and the comparison; the remaining rows are P3.
 
 ## Build your own
 

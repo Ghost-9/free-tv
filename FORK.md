@@ -29,8 +29,9 @@ approximate; edit `config.properties` and rebuild if the TV is somewhere else.
   `app/assets/sounds/`; one will be wired behind an off-by-default Sound setting.
 - Keyless **Popular on Netflix** rail via JustWatch (`NetflixRail.java`), with direct
   `netflix.com/title/<id>` links and a weekly cache.
-- Settings retention fix: one settings task plus explicit `Scene.release()`. Measured 101 → 191 MB
-  graphics over 10 opens before, 77 → 97 MB after 10 and 91 MB after 20.
+- Settings retention fix: Settings runs in its own `:settings` process, `Scene.release()` on exit and
+  the process is ended. Measured 101 → 191 MB graphics over 10 opens before; 77 MB fresh, 64 MB after
+  10 opens with the fix (only `:home` remains). The generic upstream variant is PR #1 on the original repo.
 - Build with **build-tools 36.0.0**. Build-tools 34's `d8` crashes with a `NullPointerException` on
   the nameless `MethodParameters` entry that javac 21 emits for an anonymous class's outer instance.
 
