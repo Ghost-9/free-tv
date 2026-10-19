@@ -1,164 +1,110 @@
 <div align="center">
 
-<img src="docs/assets/icon-512.png" width="96" alt="">
+<img src="docs/assets/icon-512.png" width="96" alt="ArtCraft Launcher">
 
-# Free My TV
+# ArtCraft Launcher
 
-**A fast, ad-free home screen for Google TV.**
+**A calm, ad-free home screen for Android TV and Google TV.**
 
-Trending picks from your own apps, the weather at a glance, and a look that follows the sunset.<br>
-Open source. Built with Claude Code. One button to undo.
+A cinematic clock, the weather, a real **Popular on Netflix** rail, and the apps you actually use.<br>
+No root. One button back to the factory home screen.
 
-[**freemytv.io**](https://freemytv.io) · [Install](#install) · [Any TV](#any-tv) · [Make it yours](#make-it-yours)
+[![Android 14](https://img.shields.io/badge/Android-14-3DDC84?logo=android&logoColor=white)](https://www.android.com/tv/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-2ea44f.svg)](LICENSE)
+[![Built on Free My TV](https://img.shields.io/badge/Built%20on-Free%20My%20TV-E50914.svg)](https://github.com/simbasjungles/free-my-tv)
 
-<img src=".github/preview.webp" width="880" alt="The Free My TV home screen: a glass shelf of apps, trending picks, and a drawer with the weather and crypto prices">
+<img src="docs/artcraft/home.webp" width="880" alt="ArtCraft Launcher on an Acer R10G: clock, Popular on Netflix rail, and the app shelf">
 
 </div>
 
+## Why
+
+The stock launcher is a shop window: sponsored rows, promos, and a recommendation feed you did not ask for. ArtCraft replaces it with a quiet screen — time, weather, one useful Netflix rail, your apps — and puts everything back with one switch.
+
+It is built on **[Free My TV](https://github.com/simbasjungles/free-my-tv)** by Simba (MIT). The Acer R10G / Realtek profile, the Netflix rail, the retention fix and the sound lab are ours; the original design and the safety model are his. See [NOTICE](NOTICE) and [CREDITS](CREDITS.md).
+
 ## What you get
 
-- **No ads.** No sponsored rows, banners or autoplaying promos. Not one.
-- **Your apps, front and center.** The streaming apps you actually use, on a glass shelf.
-- **Trending, not sponsored.** Three fresh picks every hour from what's trending this week and the latest releases, only from apps you already have. Movies and Shows get their own tabs.
-- **Weather and markets, one press away.** The hour-by-hour forecast, sunrise and sunset, and live crypto prices.
-- **Light by day, dark by night.** It follows your city's real sunset, the way your phone does.
-- **A screensaver to match.** Full-screen photos of the picks with a big glass clock.
-- **Fast.** 60 fps, every frame in 16.6 ms, on the TV's own chip. The home screen uses 96 MB of memory instead of 242 MB (−60%).<br><sub>Measured on a 98″ TCL Google TV running Android 14.</sub>
-- **Safe.** No root. Nothing is uninstalled. One button brings back the factory home screen.
+- **Popular on Netflix — no account, no API key.** Six titles for India, refreshed weekly, each opening its Netflix page. Popularity data from JustWatch; not a personal recommendation. [Why](#the-netflix-rail).
+- **A clock that is actually a clock.** Time, date, and the weather, in the same visual language as the shelf.
+- **Your shelf, not theirs.** Netflix, YouTube, Prime Video, JioHotstar, Apple TV, Spotify, Stremio and SmartTube on the Acer build; edit one array for your TV.
+- **A drawer that earns its place.** Live TV, HDMI inputs, All Apps, Home Settings, TV Settings, the full weather and crypto cards.
+- **No ads, no analytics, no accounts.** Three permissions: internet, network state, boot completed. No tracking SDK, no library, no Gradle.
+- **One button back.** *Original* restores the factory home screen, screensaver and every app it turned off, without uninstalling anything.
+- **No sound by default.** The old click is gone. Ten new UI sounds live in [`sound-lab/`](sound-lab); choose one when you want it.
+
+## Measured, not claimed
+
+Same TV, same boot, Acer R10G (1.81 GiB RAM, Android 14, 1920×1080):
+
+| | Stock Google TV | ArtCraft (fresh) | ArtCraft after use |
+|---|---|---|---|
+| Home PSS | 151 MB | **127 MB** | 132 MB |
+| Graphics | 40 MB | 77 MB | 91 MB |
+| Frame p50 | 17 ms | 18 ms | — |
+| Packages off | 5 | **22** | 22 |
+
+The interesting number is the before/after of the settings retention: opening Settings used to add **+9 MB of graphics per open** (101 → 191 MB over ten opens). Keeping one settings instance and releasing the `Scene` bitmaps makes it **77 → 97 MB after ten opens, 91 MB after twenty** — flat. The full method and caveats are in [`FORK.md`](FORK.md).
+
+> The home is already fast. The real constraint is 1.8 GB RAM and zram churn, not the launcher. We do not promise a faster CPU.
 
 ## Install
 
-About ten minutes. You need a Google TV or Android TV (Android 12 or newer) and a computer on the same Wi-Fi.
+**You need:** JDK 17+ (21 works), Android SDK build-tools **36.0.0**, platform **android-34**, and `adb`. Build-tools 34's `d8` crashes on the anonymous-class `MethodParameters` that javac 21 emits; 36 fixes it.
 
-### The easy way: Claude Code
+```bash
+git clone https://github.com/Ghost-9/free-my-tv
+cd free-my-tv
+cp config.example.properties config.properties   # city, country, currency
+./build.sh
+adb connect <TV-IP>:5555
+adb install -r FreeMyTV.apk
+```
 
-1. **On the TV**, turn on developer mode: Settings → System → About → press *Android TV OS build* 7 times. Then Settings → System → Developer options → turn on **USB debugging**. Write down the TV's IP address (Settings → Network & Internet).
-2. **On your computer**, get the code:
-   ```bash
-   git clone https://github.com/simbasjungles/free-my-tv && cd free-my-tv
-   ```
-3. **Open [Claude Code](https://claude.com/claude-code) in that folder** and say:
-   > Install Free My TV on my TV at 192.168.1.50. I live in Lisbon.
+On the TV: open **ArtCraft Launcher → Home Screen → ArtCraft**, and accept *Allow USB debugging* once (tick *Always allow*). The app uses the TV's own loopback ADB and runs fixed commands only; it never listens on the network.
 
-   It installs the tools it needs, builds the app and puts it on your TV. Swap in your TV's IP and your city.
-4. **On the TV**, open *Free My TV* → *Home Screen* → *Free My TV*, and accept the debugging prompt (tick *Always allow*).
+**Going back:** *Home Screen → Original*. The factory launcher, screensaver and apps return. If the home screen crashes three times in five minutes, the watchdog switches back by itself.
 
-### The manual way
+## The Netflix rail
 
-1. **On the TV**, do step 1 above.
-2. **Tools:** a JDK (17+), the Android SDK command-line tools (build-tools 34, platform android-34) and adb. On a Mac:
-   ```bash
-   brew install --cask temurin android-commandlinetools android-platform-tools
-   sdkmanager "build-tools;34.0.0" "platforms;android-34"
-   ```
-   On Linux, get OpenJDK 17, Android's command-line tools and adb from your package manager, then run the same `sdkmanager` line. On Windows, use WSL.
-3. **Build:**
-   ```bash
-   ./build.sh
-   ```
-   The first run creates `config.properties`. Set your city and your [TMDB key](#the-tmdb-key) there, then run it again.
-4. **Install:**
-   ```bash
-   adb connect 192.168.1.50:5555
-   adb install -r FreeMyTV.apk
-   ```
-5. **On the TV**, open *Free My TV* → *Home Screen* → *Free My TV*.
+Netflix does not expose per-profile recommendations to third-party apps, and the TV exposes no Watch Next rows to `shell`. The rail therefore uses **JustWatch's public popularity graph** for `Netflix India`:
 
-## Settings
+- keyless GraphQL, no account;
+- real posters, six titles, weekly cache;
+- each card carries the provider's `netflix.com/title/<id>` link and is handed to the Netflix app;
+- labelled **Popular on Netflix**, never "For You".
 
-Everything lives in `config.properties`, created by the first build:
+If Netflix or JustWatch changes the endpoint, the rail falls back to its last cache and then to a quiet message; the rest of the home screen is unaffected.
 
-| Key | What it does | Default |
-|---|---|---|
-| `tmdb_key` | Your free TMDB key, for the picks | empty |
-| `tmdb_region` | Your country (two letters): which titles are on which app | `US` |
-| `latitude`, `longitude` | Your city, for the weather and the sunset | New York |
-| `city` | The name on the weather card | `Weather` |
-| `language` | `auto` (follows the TV), `en` or `pt` | `auto` |
-| `currency` | Crypto prices in `USD`, `EUR`, `BRL`… | `USD` |
-| `temperature` | `C`, `F` or `auto` | `auto` |
-| `disable_assistant` | Also turn off Google Assistant | `false` |
-
-Changed something? Run `./build.sh` and install again. Keep `freemytv.keystore`: updates are signed with it.
-
-### The TMDB key
-
-Free, and it takes two minutes: create an account at [themoviedb.org](https://www.themoviedb.org/signup), then open [Settings → API](https://www.themoviedb.org/settings/api) and request a developer key. Paste the *API Read Access Token* (or the *API Key*) after `tmdb_key=`. It's your key: `config.properties` stays out of git.
-
-## Going back
-
-On the TV: *Free My TV* → *Home Screen* → *Original*. The factory home screen, screensaver and every app come back exactly as they were. If the new home screen ever crashes three times in five minutes, it switches back by itself.
-
-To remove it for good, switch to *Original* first, then uninstall *Free My TV* (Settings → Apps).
-
-## What it changes
-
-- It becomes the home screen and the screensaver.
-- It turns off, without uninstalling:
-  - the stock home screen and screensaver, with the remote shortcuts they run on some TVs (like the Netflix button on TCL);
-  - Google TV's recovery home, Play Games and YouTube Music;
-  - on TCL TVs, the TCL Channel, messages, store demo, hotel menu, manuals, mirroring and logging apps;
-  - Google Assistant, only with `disable_assistant=true`.
-- Picture, sound, inputs, remote pairing, Google services and the Play Store are on a protected list, checked before every change.
-
-## Any TV
-
-Free My TV runs on Google TV and Android TV: TCL, Sony, Hisense, Philips, Xiaomi and more, plus streamers like Chromecast with Google TV, the Google TV Streamer, onn 4K and NVIDIA Shield.
-
-**Samsung, LG or any other TV:** plug a Google TV streamer into HDMI and free that one. Same steps, same home screen.
-
-**A different brand or model:** ask Claude. Free My TV is made to be adapted by AI. Open the folder in Claude Code and say *"set it up for my Sony"*: it reads your TV, finds its home screen and its promo apps, updates the lists below and walks you through a test. [CLAUDE.md](CLAUDE.md) tells it how.
+## Build your own
 
 | What | Where |
 |---|---|
-| Apps to turn off | `DEBLOAT` in [`HomeMode.java`](app/src/io/freemytv/HomeMode.java) |
-| Apps never to touch | `PROTECTED` in the same file |
-| Apps on the shelf | `SHELF` in [`HomeApps.java`](app/src/io/freemytv/HomeApps.java) |
-| Your brand's live TV app | `LIVE_TV_APPS` in the same file |
+| Apps to turn off | `HomeMode.DEBLOAT` |
+| Apps never to touch | `HomeMode.PROTECTED` |
+| Shelf / Live TV / hidden apps | `HomeApps.SHELF`, `LIVE_TV_APPS`, `HIDDEN` |
+| Netflix rail | `NetflixRail.java` |
+| Sounds | `sound-lab/` (10 WAVs, 48 kHz) |
 
-## Make it yours
+The Acer profile is a starting point, not a generic debloat list. **Never run a generic Android TV package list** against a TV: `com.amazon.firebat` is Prime Video, `com.mediatek.tv.oneworld.tvcenter` is the HDMI switcher, and Widevine breaks when you guess.
 
-It's your code, and Claude Code finds its way around it. Try:
+## Roadmap
 
-- *"Add Crunchyroll to the shelf."*
-- *"Show the prices in euros."*
-- *"Add Spanish."*
-- *"Switch to the night look an hour after sunset."*
+- [x] Acer R10G profile, shelf, Live TV, 22 packages off
+- [x] Keyless Netflix rail, direct title links
+- [x] Settings/`Scene` retention fix
+- [x] ArtCraft branding, licence and credit
+- [ ] Sound picker + motion/effects setting
+- [ ] Background freeze A/B, TV Standby A/B
+- [ ] `tvbench` measurement harness, cold launch + boot baseline
+- [ ] Package rename (`io.freemytv` → `app.artcraft.launcher`) for release builds
 
-## How it works
+## Credit & licence
 
-- **A plain Android app, no Gradle, no libraries.** [`build.sh`](build.sh) runs aapt2 → javac → d8 → zipalign → apksigner and makes a 2 MB APK.
-- **It uses the TV's own ADB, from inside the TV.** The app connects to `127.0.0.1:5555` with its own key (that's the *Allow USB debugging?* prompt) and runs the same commands you would: `cmd package set-home-activity`, `settings put secure screensaver_components`, `pm disable-user`. Nothing listens to the network.
-- **Drawn by hand on one Canvas**, with Android 13 shaders for the frosted glass and the sky (plain fills on Android 12).
-- **A safety net.** A watchdog in a separate process brings back the stock home screen after three crashes in five minutes, and a boot check keeps your choice after TV updates.
-- **Data** from TMDB (trending titles, new releases and which app streams what in your country), Open-Meteo (forecast, sunrise and sunset) and Binance (24-hour prices).
+ArtCraft Launcher is a derivative of **Free My TV** © 2026 Free My TV contributors, MIT.
+ArtCraft changes © 2026 Mayank Batra / Avartana Labs, MIT.
 
-| File | What it is |
-|---|---|
-| [`HomeView.java`](app/src/io/freemytv/HomeView.java) | The home screen |
-| [`HomeMode.java`](app/src/io/freemytv/HomeMode.java) | Switching between Free My TV and Original |
-| [`Adb.java`](app/src/io/freemytv/Adb.java) | The TV's own ADB, from inside the TV |
-| [`Recs.java`](app/src/io/freemytv/Recs.java) | The picks (TMDB) |
-| [`HomeData.java`](app/src/io/freemytv/HomeData.java) | Weather and prices |
-| [`HomeApps.java`](app/src/io/freemytv/HomeApps.java) | The shelf, inputs and All Apps |
-| [`DreamView.java`](app/src/io/freemytv/DreamView.java) | The screensaver |
-| [`SettingsActivity.java`](app/src/io/freemytv/SettingsActivity.java) | The settings screen (the app's icon) |
-| [`Watchdog.java`](app/src/io/freemytv/Watchdog.java) | The safety net |
+Data: JustWatch (popularity), Netflix (title links, posters fetched at runtime), Open-Meteo (weather), Binance (prices).
+Type: Inter (SIL OFL 1.1). Icons: Material Symbols (Apache 2.0). Coin logos: cryptocurrency-icons (CC0).
 
-The website ([freemytv.io](https://freemytv.io)) is in [`docs/`](docs): plain HTML, CSS and JS on GitHub Pages.
-
-## Privacy
-
-No accounts, no analytics, no tracking. The app only talks to TMDB, Open-Meteo (with the coordinates you set) and Binance. Your settings stay on your computer and your TV.
-
-## Credits
-
-- Built with [Claude Code](https://claude.com/claude-code).
-- This product uses the TMDB API but is not endorsed or certified by [TMDB](https://www.themoviedb.org/).
-- Weather data by [Open-Meteo.com](https://open-meteo.com/) (CC BY 4.0). Prices from the [Binance](https://www.binance.com/) public API.
-- Icons: [Material Symbols](https://fonts.google.com/icons) (Apache 2.0). Font: [Inter](https://rsms.me/inter/) (SIL OFL 1.1). Coin logos: [cryptocurrency-icons](https://github.com/spothq/cryptocurrency-icons) (CC0).
-- Not affiliated with Google, TCL or any streaming service. App names and logos belong to their owners.
-
-## License
-
-[MIT](LICENSE). Fork it, change it, ship it.
+Not affiliated with, endorsed by, or sponsored by Netflix, Google, Acer or Realtek. Netflix and Google TV are trademarks of their owners. The MIT licence is in [LICENSE](LICENSE).
