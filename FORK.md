@@ -4,7 +4,7 @@
 the original TCL support belongs there. This fork exists to run it on one specific TV and to send the
 generic fixes back.
 
-**This fork:** https://github.com/Ghost-9/free-my-tv · branch `acer-r10g` · PR #1
+**This fork:** https://github.com/Ghost-9/free-tv · branch `acer-r10g` · PR #1
 **Product name:** Free TV (the upstream code is credited in NOTICE/CREDITS and LICENSE)
 **Target:** Acer R10G (`MOKA`, Realtek `rtd6748`, Android 14 / API 34, 1.81 GiB RAM, 4× ARMv7,
 1920×1080 display override, Google TV `launcherx`).

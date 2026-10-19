@@ -53,7 +53,7 @@ The interesting number is the before/after of the settings retention: opening Se
 **You need:** JDK 17+ (21 works), Android SDK build-tools **36.0.0**, platform **android-34**, and `adb`. Build-tools 34's `d8` crashes on the anonymous-class `MethodParameters` that javac 21 emits; 36 fixes it.
 
 ```bash
-git clone https://github.com/Ghost-9/free-my-tv
+git clone https://github.com/Ghost-9/free-tv
 cd free-my-tv
 cp config.example.properties config.properties   # city, country, currency
 ./build.sh
