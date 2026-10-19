@@ -31,7 +31,7 @@ It is built on **[Free My TV](https://github.com/simbasjungles/free-my-tv)** by 
 - **A drawer that earns its place.** Live TV, HDMI inputs, All Apps, Home Settings, TV Settings, the full weather and crypto cards.
 - **No ads, no analytics, no accounts.** Three permissions: internet, network state, boot completed. No tracking SDK, no library, no Gradle.
 - **One button back.** *Original* restores the factory home screen, screensaver and every app it turned off, without uninstalling anything.
-- **No sound by default.** The old click is gone. Ten new UI sounds live in [`sound-lab/`](sound-lab); choose one when you want it.
+- **Two quiet sounds, chosen.** 01 Tick Soft on focus and 04 Glass Ping on open; the other eight live in [`sound-lab/`](sound-lab) for a future picker.
 
 ## Measured, not claimed
 
@@ -44,7 +44,7 @@ Same TV, same boot, Acer R10G (1.81 GiB RAM, Android 14, 1920×1080):
 | Frame p50 | 17 ms | 18 ms | — |
 | Packages off | 5 | **22** | 22 |
 
-The interesting number is the before/after of the settings retention: opening Settings used to add **+9 MB of graphics per open** (101 → 191 MB over ten opens). Settings now runs in its own `:settings` process, releases its `Scene` bitmaps on exit, and ends that process; the home stays at **77 MB graphics fresh, 64 MB after ten opens** — no growth. Full method and caveats: [`FORK.md`](FORK.md).
+These P2 figures predate the larger 1.2 rail; P4 re-measures. The before/after of the settings retention: opening Settings used to add **+9 MB of graphics per open** (101 → 191 MB over ten opens). Settings now runs in its own `:settings` process, releases its `Scene` bitmaps on exit, and ends that process; the home stays at **77 MB graphics fresh, 64 MB after ten opens** — no growth. Full method and caveats: [`FORK.md`](FORK.md).
 
 > The home is already fast. The real constraint is 1.8 GB RAM and zram churn, not the launcher. We do not promise a faster CPU.
 

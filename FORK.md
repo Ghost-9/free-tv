@@ -25,8 +25,7 @@ approximate; edit `config.properties` and rebuild if the TV is somewhere else.
 - `HomeView`: without a recommendation key, say so instead of drawing three empty cards.
 - `app/assets/logos/youtube.png`, `youtube-dark.png`, `smarttube.png`: transparent marks; the banner
   extraction was cropping YouTube and shrinking SmartTube.
-- The synthesized click was removed entirely. Ten replacement sounds live in `sound-lab/` and
-  `app/assets/sounds/`; one will be wired behind an off-by-default Sound setting.
+- The synthesized click was removed entirely. Ten replacement sounds live in `sound-lab/`; 01 Tick Soft (focus) and 04 Glass Ping (open) are wired in `res/raw`.
 - Keyless **Popular on Netflix** rail via JustWatch (`NetflixRail.java`), with direct
   `netflix.com/title/<id>` links and a weekly cache.
 - Settings retention fix: Settings runs in its own `:settings` process, `Scene.release()` on exit and
