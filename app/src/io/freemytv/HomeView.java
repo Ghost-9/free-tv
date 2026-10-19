@@ -93,7 +93,6 @@ final class HomeView extends ViewGroup implements Choreographer.FrameCallback, H
     private final Scene scene = new Scene();
     private final HomeData data;
     private final Recs recs;
-    private final Click click;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final SharedPreferences ui;
     private final TvInputManager tvInputs;
@@ -280,7 +279,6 @@ final class HomeView extends ViewGroup implements Choreographer.FrameCallback, H
         activity = a;
         data = HomeData.get(a);
         recs = Recs.get(a);
-        click = new Click(a);
         ui = a.getSharedPreferences("home-ui", Context.MODE_PRIVATE);
         tvInputs = (TvInputManager) a.getSystemService(Context.TV_INPUT_SERVICE);
         setFocusable(true);
@@ -354,7 +352,6 @@ final class HomeView extends ViewGroup implements Choreographer.FrameCallback, H
 
     void destroy() {
         pause();
-        click.release();
     }
 
     /** Starting state (Home pressed while the home screen is showing): first app focused, drawer and sheet closed. */
@@ -1678,7 +1675,6 @@ final class HomeView extends ViewGroup implements Choreographer.FrameCallback, H
         } else {
             return;
         }
-        click.move();
     }
 
     private void move(int dx, int dy) {
@@ -1747,7 +1743,6 @@ final class HomeView extends ViewGroup implements Choreographer.FrameCallback, H
                 break;
         }
         retarget(false);
-        click.move();
     }
 
     private static int nearest(RectF[] rects, float x) {
@@ -1779,7 +1774,6 @@ final class HomeView extends ViewGroup implements Choreographer.FrameCallback, H
         if (next == gridIndex) return;
         gridIndex = next;
         retargetGrid(false);
-        click.move();
         gridDirty = true;
     }
 
@@ -1820,7 +1814,6 @@ final class HomeView extends ViewGroup implements Choreographer.FrameCallback, H
             it = shelf.get(shelfIndex);
             r = tileRects[shelfIndex];
         }
-        click.open();
         if (it.kind == HomeApps.ALL_APPS) {
             openSheet();
             return;
@@ -1955,6 +1948,14 @@ final class HomeView extends ViewGroup implements Choreographer.FrameCallback, H
             Paint p = i == tab ? lTabOn : lTab;
             if (i == tab) lTabOn.setColor(blend(tone(L_INK, WHITE), L_INK, focus));   // always dark on the white pill
             c.drawText(tabs()[i], r.centerX() - p.measureText(tabs()[i]) / 2, r.centerY() + Ui.halfCap(p), p);
+        }
+        if (cards.isEmpty()) {
+            // No TMDB key: nothing to recommend, so say it instead of drawing three empty cards.
+            lTab.setColor(tone(0x8C6E6E73, 0x8CFFFFFF));
+            c.drawText(Ui.tr("Sem chave do TMDB: os destaques ficam desligados.",
+                    "No TMDB key: trending picks are off."), MARGIN * k, (L_CARDS_TOP + 70) * k, lTab);
+            lTab.setColor(L_DIM);
+            return;
         }
         int top = -1;
         for (int i = 0; i < 3; i++) if (cardFocus[i].value > 0.02f && (top < 0 || cardFocus[i].value > cardFocus[top].value)) top = i;
@@ -2096,7 +2097,6 @@ final class HomeView extends ViewGroup implements Choreographer.FrameCallback, H
                 return false;
         }
         retarget(false);
-        click.move();
         return true;
     }
 

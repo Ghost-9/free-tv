@@ -80,29 +80,27 @@ final class HomeApps {
      */
     private static final String[][] SHELF = {
         {"netflix", "Netflix", "com.netflix.ninja", "E50914", "", "1"},
-        {"youtube", "YouTube", "com.google.android.youtube.tv", "FF0033", "play", "1"},
+        {"youtube", "YouTube", "com.google.android.youtube.tv", "111111", "", "1"},
         {"prime", "Prime Video", "com.amazon.amazonvideo.livingroom", "1A98FF", "tint", "0.96"},
-        {"disney", "Disney+", "com.disney.disneyplus", "1838C8", "", "1"},
-        {"max", "Max", "com.wbd.stream", "6C3BE0", "", "1.32"},
+        {"hotstar", "Disney+ Hotstar", "in.startv.hotstar", "1F80E0", "", "1.3"},
         {"appletv", "Apple TV", "com.apple.atve.androidtv.appletv", "B8BCC6", "", "1.1"},
-        {"hulu", "Hulu", "com.hulu.livingroomplus", "1CE783", "", "1"},
-        {"paramount", "Paramount+", "com.cbs.ott", "0064FF", "", "1"},
-        {"peacock", "Peacock", "com.peacocktv.peacockandroid", "6E55DC", "", "1"},
-        {"globoplay", "Globoplay", "com.globo.globotv", "FF5A1F", "tint", "1"},
         {"spotify", "Spotify", "com.spotify.tv.android", "1DB954", "", "1"},
+        {"stremio", "Stremio", "com.stremio.one", "7B5CFA", "", "1"},
+        {"smarttube", "SmartTube", "org.smarttube.stable", "E5484D", "", "1"},
     };
     private static final int MAX_SHELF = 8;
     /** Live TV apps of some brands (the antenna's channels open through the standard Android request first). */
-    static final String[] LIVE_TV_APPS = {"com.tcl.tv", "com.google.android.tv", "com.mediatek.wwtv.tvcenter", "com.sony.dtv.tvx"};
+    static final String[] LIVE_TV_APPS = {"com.realtek.tv", "com.google.android.tv", "com.mediatek.wwtv.tvcenter", "com.sony.dtv.tvx"};
     /** Kept out of "All Apps" (only hidden, still installed). Add the ones your TV shows that you never use. */
     private static final Set<String> HIDDEN = new HashSet<>(java.util.Arrays.asList(
             "com.google.android.play.games",        // Google Play Games
-            "com.tcl.t_solo",                       // TCL: T-Solo
-            "com.tcl.waterfall.overseas",           // TCL Channel
-            "com.tcl.dashboard",                    // TCL Home
-            "com.tcl.ocean.instructions",           // TCL: User Guide
-            "com.tcl.guard",                        // TCL: Safety Guard
-            "com.tcl.exhibit"));                    // TCL: T-Exhibition
+            "com.google.android.youtube.tvmusic",   // YouTube Music
+            "com.apps.biz.ds",                      // M Sign (digital signage)
+            "com.apps.biz.mt",                      // Meeting Mode
+            "com.apps.esticker3",                   // Esticker2
+            "com.apps.function.audiolink",          // Audio Link setup
+            "com.mk.tv.caption",                    // caption settings
+            "com.seraphic.media.tv.interactive.app")); // ACR
 
     private static final Map<String, Bitmap> TILES = new HashMap<>();   // key → ready card
     private static final Map<String, Bitmap> LOGOS = new HashMap<>();   // key → colored logo with no background
