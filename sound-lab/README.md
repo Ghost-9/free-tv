@@ -1,4 +1,4 @@
-# ArtCraft sound lab
+# Free TV sound lab
 
 Ten UI sounds, generated locally for the TV (48 kHz, mono, 16-bit WAV, peak-normalised to −12 dBFS).
 No sampled material; the files are CC0.

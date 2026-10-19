@@ -1,4 +1,4 @@
-ArtCraft Launcher
+Free TV
 Copyright (c) 2026 Mayank Batra / Avartana Labs
 
 This product is a derivative work of Free My TV
@@ -7,7 +7,7 @@ contributors, licensed under the MIT License. The original copyright notice
 and licence text are retained in LICENSE. The upstream project supplied the
 home-screen design, the switching model and the safety watchdog; this fork
 adds the Acer R10G / Realtek profile, the Netflix rail, the retention fix and
-the ArtCraft branding.
+the Free TV branding.
 
 Third-party material:
 - Inter font, SIL Open Font License 1.1 (assets/fonts, OFL.txt).
@@ -20,6 +20,6 @@ Third-party material:
   runtime.
 - UI sounds generated locally for this project; released under CC0.
 
-ArtCraft Launcher is not affiliated with, endorsed by, or sponsored by Netflix,
+Free TV is not affiliated with, endorsed by, or sponsored by Netflix,
 Google, Acer, Realtek or JustWatch. Android TV and Google TV are trademarks of
 Google LLC.

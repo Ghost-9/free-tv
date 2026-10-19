@@ -1,6 +1,6 @@
 # Credits
 
-**ArtCraft Launcher** would not exist without these people and projects.
+**Free TV** would not exist without these people and projects.
 
 ## Upstream
 
@@ -9,7 +9,7 @@
   The upstream copyright is retained in [LICENSE](LICENSE); the relationship is described in
   [NOTICE](NOTICE) and [FORK.md](FORK.md).
 
-## ArtCraft changes
+## Free TV changes
 
 - Acer R10G / Realtek `rtd6748` profile: `HomeMode.DEBLOAT`, `HomeMode.PROTECTED`, `HomeApps.SHELF`,
   `LIVE_TV_APPS`, `HIDDEN`.
@@ -17,7 +17,7 @@
   and the provider's `netflix.com/title/<id>` links.
 - Settings/`Scene` retention fix: `:settings` process, explicit `Scene.release()`, process ended on exit; measured 101 → 191 MB
   over ten opens before, 77 MB fresh / 64 MB after ten opens with the fix.
-- Transparent YouTube and SmartTube marks; ArtCraft branding, README, licence and sound lab.
+- Transparent YouTube and SmartTube marks; Free TV branding, README, licence and sound lab.
 
 ## Data and assets
 
@@ -30,7 +30,7 @@
 | Netflix links/posters | Netflix / JustWatch offers | fetched at runtime, not redistributed |
 | Weather | Open-Meteo | CC BY 4.0 |
 | Prices | Binance public API | fetched at runtime |
-| UI sounds | generated for ArtCraft | CC0 |
+| UI sounds | generated for Free TV | CC0 |
 
 ## Disclaimer
 

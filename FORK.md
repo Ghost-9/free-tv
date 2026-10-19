@@ -1,11 +1,11 @@
-# Fork notes — ArtCraft Launcher
+# Fork notes — Free TV
 
 **Upstream:** https://github.com/simbasjungles/free-my-tv (MIT) — all credit for the app, the design and
 the original TCL support belongs there. This fork exists to run it on one specific TV and to send the
 generic fixes back.
 
 **This fork:** https://github.com/Ghost-9/free-my-tv · branch `acer-r10g` · PR #1
-**Product name:** ArtCraft Launcher (the upstream code is credited in NOTICE/CREDITS and LICENSE)
+**Product name:** Free TV (the upstream code is credited in NOTICE/CREDITS and LICENSE)
 **Target:** Acer R10G (`MOKA`, Realtek `rtd6748`, Android 14 / API 34, 1.81 GiB RAM, 4× ARMv7,
 1920×1080 display override, Google TV `launcherx`).
 

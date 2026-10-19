@@ -110,6 +110,7 @@ public class SettingsActivity extends Activity {
 
         private final SettingsActivity activity;
         private final Scene scene = new Scene();
+        private final UiSound sound;
         private final Handler handler = new Handler(Looper.getMainLooper());
         private final Spring[] pop = new Spring[5];
         private final RectF tmp = new RectF(), rowRect = new RectF();
@@ -138,6 +139,7 @@ public class SettingsActivity extends Activity {
         SettingsView(SettingsActivity a) {
             super(a);
             activity = a;
+            sound = new UiSound(a);
             for (int i = 0; i < pop.length; i++) pop[i] = new Spring(0.28f, 0.85f, 0);
             HomeData.Weather wx = HomeData.get(a).weather;
             Shaders.sky(scene.palette, System.currentTimeMillis(), wx.sunrise, wx.sunset);
@@ -163,6 +165,7 @@ public class SettingsActivity extends Activity {
 
         void release() {
             pause();
+            sound.release();
             scene.release();
         }
 
@@ -237,8 +240,8 @@ public class SettingsActivity extends Activity {
 
             // On the left: big symbol, title, description.
             float cx = 500 * k;
-            Symbols.draw(getContext(), c, "sparkles", cx, 400 * k, 150 * k, 0xEBFFFFFF);
-            c.drawText("ArtCraft", cx, 612 * k, title);
+            Symbols.draw(getContext(), c, "freetv", cx, 400 * k, 150 * k, 0xEBFFFFFF);
+            c.drawText("Free TV", cx, 612 * k, title);
             c.drawText(Ui.tr("Início e tela de descanso da TV", "A calmer home screen for your TV"), cx, 660 * k, subtitle);
             c.drawText(versionName(getContext()), cx, 704 * k, version);
 
@@ -248,7 +251,7 @@ public class SettingsActivity extends Activity {
         private void drawMain(Canvas c, float seconds) {
             boolean working = busy();
             String busyText = state.optString("busy");
-            String mode = freeActive() ? "ArtCraft" : Ui.tr("Original", "Original");
+            String mode = freeActive() ? "Free TV" : Ui.tr("Original", "Original");
             String[] labels = {Ui.tr("Início", "Home Screen"), Ui.tr("Tela de Descanso", "Screensaver"), Ui.tr("Ajustes da TV", "TV Settings")};
             String[] values = {working ? "" : mode, Ui.tr("Ver agora", "Preview"), ""};
             for (int i = 0; i < 3; i++) {
@@ -297,8 +300,8 @@ public class SettingsActivity extends Activity {
         private float drawRecs(Canvas c, float y) {
             float x = LIST_X * k + 30 * k;
             c.drawText(Ui.tr("FAIXA DA NETFLIX", "NETFLIX RAIL"), x, y, header);
-            String line = Ui.tr("Popular na Netflix · 6 títulos · Índia · atualiza toda semana",
-                    "Popular on Netflix · 6 titles · India · refreshed weekly");
+            String line = Ui.tr("Popular na Netflix · 5 títulos · Índia · atualiza toda semana",
+                    "Popular on Netflix · 5 titles · India · refreshed weekly");
             c.drawText(TextUtils.ellipsize(line, notice, 790 * k, TextUtils.TruncateAt.END).toString(), x, y + 42 * k, notice);
             version.setTextAlign(Paint.Align.LEFT);
             c.drawText(Ui.tr("Dados de popularidade: JustWatch. Abre o título na Netflix.",
@@ -331,7 +334,7 @@ public class SettingsActivity extends Activity {
             c.drawText(Ui.tr("COMPARAÇÃO", "COMPARISON"), x, y, header);
             cellValue.setColor(0x73FFFFFF);
             c.drawText("Original", colA, y, cellValue);
-            c.drawText("ArtCraft", colB, y, cellValue);
+            c.drawText("Free TV", colB, y, cellValue);
             cellValue.setColor(0xD9FFFFFF);
             JSONObject metrics = state.optJSONObject("metrics");
             JSONObject a = metrics == null ? null : metrics.optJSONObject(HomeMode.ORIGINAL);
@@ -366,7 +369,7 @@ public class SettingsActivity extends Activity {
         private void drawChoice(Canvas c) {
             Paint heading = Ui.text(Ui.displaySemibold, 34 * k, 0xFFFFFFFF);
             c.drawText(Ui.tr("Início", "Home Screen"), LIST_X * k + 30 * k, (LIST_TOP - 24) * k, heading);
-            String[][] options = {{"ArtCraft", Ui.tr("Sem anúncios, com a tela de descanso nova", "No ads, with the new screensaver")},
+            String[][] options = {{"Free TV", Ui.tr("Sem anúncios, com a tela de descanso nova", "No ads, with the new screensaver")},
                     {"Original", Ui.tr("O Início de fábrica da TV", "The TV's factory home screen")}};
             int current = freeActive() ? 0 : 1;
             for (int i = 0; i < 2; i++) {
@@ -413,9 +416,9 @@ public class SettingsActivity extends Activity {
 
         private static String versionName(Context c) {
             try {
-                return "ArtCraft Launcher " + c.getPackageManager().getPackageInfo(c.getPackageName(), 0).versionName;
+                return "Free TV Launcher " + c.getPackageManager().getPackageInfo(c.getPackageName(), 0).versionName;
             } catch (android.content.pm.PackageManager.NameNotFoundException e) {
-                return "ArtCraft Launcher";
+                return "Free TV Launcher";
             }
         }
 
@@ -423,11 +426,11 @@ public class SettingsActivity extends Activity {
             boolean down = e.getAction() == KeyEvent.ACTION_DOWN;
             switch (e.getKeyCode()) {
                 case KeyEvent.KEYCODE_DPAD_UP:
-                    if (down && focus > 0) focus--;
+                    if (down && focus > 0) { focus--; sound.move(); }
                     invalidate();
                     return true;
                 case KeyEvent.KEYCODE_DPAD_DOWN:
-                    if (down && focus < rowCount() - 1) focus++;
+                    if (down && focus < rowCount() - 1) { focus++; sound.move(); }
                     invalidate();
                     return true;
                 case KeyEvent.KEYCODE_DPAD_LEFT:
@@ -476,6 +479,7 @@ public class SettingsActivity extends Activity {
         }
 
         private void activate() {
+            sound.open();
             Context c = getContext();
             if (screen == HOME_CHOICE) {
                 boolean wantFree = focus == 0;

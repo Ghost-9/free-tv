@@ -44,8 +44,8 @@ final class NetflixRail {
     private static final String API = "https://apis.justwatch.com/graphql";
     private static final String PREFS = "netflix-rail";
     private static final long WEEK = 7L * 24 * 60 * 60 * 1000;
-    private static final int COUNT = 6;                 // six posters, plus the "See all" card
-    private static final float LEFT = 80, TOP = 340, CARD_W = 210, CARD_H = 294, GAP = 20;
+    private static final int COUNT = 5;                 // five larger posters, plus the "See all" card
+    private static final float LEFT = 80, TOP = 330, CARD_W = 270, CARD_H = 378, GAP = 18;
 
     private static final String QUERY =
             "query { popularTitles(country: IN, first: " + COUNT + ", filter: {packages: [\"nfx\"]}) { " +
@@ -78,6 +78,7 @@ final class NetflixRail {
     private final Paint shadow = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint image = new Paint(Paint.FILTER_BITMAP_FLAG | Paint.DITHER_FLAG);
     private final Paint seeArrow = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint glow = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Path clip = new Path();
     private final RectF box = new RectF(), cell = new RectF(), tmp = new RectF();
     private volatile boolean fetching;
@@ -101,6 +102,8 @@ final class NetflixRail {
         seeArrow.setTextAlign(Paint.Align.CENTER);
         shadow.setColor(0x66000000);
         shadow.setMaskFilter(new BlurMaskFilter(18, BlurMaskFilter.Blur.NORMAL));
+        glow.setColor(0x26FF5A4E);
+        glow.setMaskFilter(new BlurMaskFilter(54, BlurMaskFilter.Blur.NORMAL));
         border.setStyle(Paint.Style.STROKE);
         border.setStrokeWidth(1.5f);
     }
@@ -190,10 +193,10 @@ final class NetflixRail {
         long now = System.currentTimeMillis();
         c.drawText(Ui.clock(now), 80 * k, 150 * k, clock);
         c.drawText(Ui.date(now), 84 * k, 184 * k, date);
-        c.drawText(Ui.tr("NETFLIX · ÍNDIA", "NETFLIX · INDIA"), 80 * k, 250 * k, kicker);
-        c.drawText(Ui.tr("Popular na Netflix", "Popular on Netflix"), 80 * k, 292 * k, title);
+        c.drawText(Ui.tr("NETFLIX · ÍNDIA", "NETFLIX · INDIA"), 80 * k, 238 * k, kicker);
+        c.drawText(Ui.tr("Popular na Netflix", "Popular on Netflix"), 80 * k, 280 * k, title);
         c.drawText(Ui.tr("Atualiza toda semana · abre o título na Netflix",
-                "Refreshed weekly · opens the title in Netflix"), 80 * k, 318 * k, sub);
+                "Refreshed weekly · opens the title in Netflix"), 80 * k, 306 * k, sub);
 
         if (items.isEmpty()) {
             Paint p = sub;
@@ -207,6 +210,16 @@ final class NetflixRail {
             return;
         }
 
+        if (focused >= 0 && focused < items.size()) {
+            float gf = focus != null && focused < focus.length ? Ui.clamp(focus[focused].value) : 0;
+            if (gf > 0.01f) {
+                rect(focused, k, cell);
+                tmp.set(cell);
+                tmp.inset(-18 * k * gf, -18 * k * gf);
+                glow.setAlpha(Math.round(255 * gf));
+                c.drawRoundRect(tmp, 22 * k, 22 * k, glow);
+            }
+        }
         int top = -1;
         for (int i = 0; i < items.size(); i++) {
             float f = focus != null && i < focus.length ? Ui.clamp(focus[i].value) : 0;
@@ -322,7 +335,7 @@ final class NetflixRail {
             c.setRequestMethod("POST");
             c.setDoOutput(true);
             c.setRequestProperty("Content-Type", "application/json");
-            c.setRequestProperty("User-Agent", "ArtCraftLauncher/1.0");
+            c.setRequestProperty("User-Agent", "FreeTV/1.2");
             byte[] body = ("{\"query\":\"" + QUERY.replace("\"", "\\\"") + "\"}").getBytes(StandardCharsets.UTF_8);
             try (java.io.OutputStream out = c.getOutputStream()) { out.write(body); }
             int code = c.getResponseCode();
@@ -406,7 +419,7 @@ final class NetflixRail {
             HttpURLConnection c = (HttpURLConnection) new URL(it.poster).openConnection();
             c.setConnectTimeout(8000);
             c.setReadTimeout(12000);
-            c.setRequestProperty("User-Agent", "ArtCraftLauncher/1.0");
+            c.setRequestProperty("User-Agent", "FreeTV/1.2");
             if (c.getResponseCode() != 200) throw new IOException("HTTP " + c.getResponseCode());
             try (InputStream in = c.getInputStream(); FileOutputStream out = new FileOutputStream(part)) {
                 byte[] b = new byte[8192];

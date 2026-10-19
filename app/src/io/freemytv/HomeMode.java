@@ -159,15 +159,15 @@ final class HomeMode {
             s.put("mode", FREE).put("since", System.currentTimeMillis()).put("homeReverted", false)
                     .put("disabled", new JSONArray(sorted(disabled)));
             save(c, s);
-            notice(c, Ui.tr("ArtCraft ligado: Início e tela de descanso novos, " + disabled.size() + " apps desligados.",
-                    "ArtCraft is on: new home screen and screensaver, " + disabled.size() + " apps turned off."));
+            notice(c, Ui.tr("Free TV ligado: Início e tela de descanso novos, " + disabled.size() + " apps desligados.",
+                    "Free TV is on: new home screen and screensaver, " + disabled.size() + " apps turned off."));
             busy(c, Ui.tr("Medindo o Free My TV…", "Measuring Free My TV…"));
             measureHomeTime(c, adb, FREE);
             done(c, null);
             adb.shell("am start -a android.intent.action.MAIN -c android.intent.category.HOME");
             ModeJob.schedule(c, ModeJob.MEMORY, FREE, 120_000);
         } catch (Exception e) {
-            done(c, Ui.tr("Não deu para ligar o ArtCraft: ", "Couldn't turn on ArtCraft: ") + e.getMessage());
+            done(c, Ui.tr("Não deu para ligar o Free TV: ", "Couldn't turn on Free TV: ") + e.getMessage());
         }
     }
 
@@ -243,8 +243,8 @@ final class HomeMode {
                 }
                 s.put("homeReverted", true).put("disabled", kept);
                 save(app, s);
-                notice(app, Ui.tr("O Início do ArtCraft caiu 3 vezes seguidas; voltei para o Início original.",
-                        "ArtCraft's home screen crashed 3 times in a row; I switched back to the original one."));
+                notice(app, Ui.tr("O Início do Free TV caiu 3 vezes seguidas; voltei para o Início original.",
+                        "Free TV's home screen crashed 3 times in a row; I switched back to the original one."));
                 adb.shell("am start -a android.intent.action.MAIN -c android.intent.category.HOME");
             } catch (Exception e) {
                 AppLog.w("could not give the home screen back: " + e.getMessage());
@@ -301,14 +301,14 @@ final class HomeMode {
                 latest.put("disabled", new JSONArray(sorted(disabled)));
                 save(app, latest);
             } catch (Exception e) {
-                notice(app, Ui.tr("Não consegui conferir o ArtCraft: ", "Couldn't check ArtCraft: ") + e.getMessage());
+                notice(app, Ui.tr("Não consegui conferir o Free TV: ", "Couldn't check Free TV: ") + e.getMessage());
                 return;
             }
             if (!fixed.isEmpty()) {
                 notice(app, (updated ? Ui.tr("A atualização da TV religou ", "The TV update turned back on ")
                         : Ui.tr("Desliguei o que faltava: ", "Turned off what was missing: ")) + String.join(", ", fixed) + ".");
             } else if (updated) {
-                notice(app, Ui.tr("A TV foi atualizada; o ArtCraft continua igual.", "The TV was updated; ArtCraft is still on."));
+                notice(app, Ui.tr("A TV foi atualizada; o Free TV continua igual.", "The TV was updated; Free TV is still on."));
             }
         }
     }

@@ -93,6 +93,7 @@ final class HomeView extends ViewGroup implements Choreographer.FrameCallback, H
     private final Scene scene = new Scene();
     private final HomeData data;
     private final Recs recs;
+    private final UiSound sound;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final SharedPreferences ui;
     private final TvInputManager tvInputs;
@@ -116,11 +117,11 @@ final class HomeView extends ViewGroup implements Choreographer.FrameCallback, H
     private final RectF[] topRects = new RectF[6];
     private final Spring[] cardFocus = new Spring[3];
     private final RectF[] cardRects = new RectF[3];
-    private final Spring[] nfFocus = new Spring[7];
+    private final Spring[] nfFocus = new Spring[6];
     private NetflixRail nfRail;
     private int nfIndex;
     private final List<HomeApps.Item> lightButtons = new ArrayList<>();
-    private Paint lTitle, lTab, lTabOn, lCardTitle, lCardMeta, lQuote, lTip;
+    private Paint lTitle, lTab, lTabOn, lCardTitle, lCardMeta, lQuote, lTip, cardTag;
     private Shader lightGradient;
 
     // Shelf
@@ -282,6 +283,7 @@ final class HomeView extends ViewGroup implements Choreographer.FrameCallback, H
         activity = a;
         data = HomeData.get(a);
         recs = Recs.get(a);
+        sound = new UiSound(a);
         ui = a.getSharedPreferences("home-ui", Context.MODE_PRIVATE);
         tvInputs = (TvInputManager) a.getSystemService(Context.TV_INPUT_SERVICE);
         setFocusable(true);
@@ -359,6 +361,7 @@ final class HomeView extends ViewGroup implements Choreographer.FrameCallback, H
     void destroy() {
         pause();
         if (nfRail != null) nfRail.stop();
+        sound.release();
         scene.release();
     }
 
@@ -509,6 +512,7 @@ final class HomeView extends ViewGroup implements Choreographer.FrameCallback, H
         drawerLabel.setTextAlign(Paint.Align.CENTER);
         cardTitle = Ui.text(Ui.semibold, 25 * k, 0xB3FFFFFF);
         cardText = Ui.text(Ui.medium, 29 * k, 0xF2FFFFFF);
+        cardTag = Ui.text(Ui.semibold, 20 * k, 0xB3FFFFFF);
         cardDim = Ui.numbers(Ui.medium, 23 * k, 0xADFFFFFF);
         cardDimRight = Ui.text(Ui.medium, 21 * k, 0x99FFFFFF);
         cardDimRight.setTextAlign(Paint.Align.RIGHT);
@@ -1049,13 +1053,13 @@ final class HomeView extends ViewGroup implements Choreographer.FrameCallback, H
         float total = spacing * (n - 1);
         for (int i = 0; i < n; i++) {
             values[i] = HomeData.compact(data.prices[i]);
-            glyphs[i] = Glyphs.width(getContext(), HomeData.COINS[i], cap);
+            glyphs[i] = cardTag.measureText(HomeData.SHORT[i]);
             total += glyphs[i] + gap + text.measureText(values[i]);
         }
         float x = right - total;
         for (int i = 0; i < n; i++) {
-            Glyphs.coin(getContext(), c, HomeData.COINS[i], x + glyphs[i] / 2, base - cap / 2, cap,
-                    Ui.alpha(tone(0xB38E8E93, 0x8CFFFFFF), fade));
+            cardTag.setColor(Ui.alpha(tone(0xB38E8E93, 0x8CFFFFFF), fade));
+            c.drawText(HomeData.SHORT[i], x, base, cardTag);
             x += glyphs[i] + gap;
             c.drawText(values[i], x, base, text);
             x += text.measureText(values[i]) + spacing;
@@ -1373,15 +1377,15 @@ final class HomeView extends ViewGroup implements Choreographer.FrameCallback, H
     private void drawQuotesCard(Canvas c, RectF r) {
         drawerCard(c, r);
         float x = r.left + 34 * k, right = r.right - 34 * k;
-        c.drawText(Ui.tr("Cotações", "Crypto"), x, r.top + 54 * k, cardTitle);
+        c.drawText(Ui.tr("Mercados", "Markets"), x, r.top + 54 * k, cardTitle);
         String stale = HomeData.staleness(data.pricesAt, 5 * 60_000L);
-        c.drawText(stale.isEmpty() ? Ui.tr("variação em 24 h", "24h change") : Ui.tr("de ", "") + stale, right, r.top + 54 * k, cardDimRight);
-        float cap = Ui.cap(cardText);
+        c.drawText(stale.isEmpty() ? Ui.tr("variação no dia", "day change") : Ui.tr("de ", "") + stale, right, r.top + 54 * k, cardDimRight);
         for (int i = 0; i < HomeData.coinCount(); i++) {
-            float base = r.top + (110 + 52 * i) * k, mid = base - cap / 2;
-            float gw = Glyphs.width(getContext(), HomeData.COINS[i], cap);
-            Glyphs.coin(getContext(), c, HomeData.COINS[i], x + 14 * k, mid, cap, tone(L_DIM, 0xCCFFFFFF));
-            c.drawText(HomeData.COIN_NAMES[i], x + Math.max(gw, 28 * k) / 2 + 30 * k, base, cardText);
+            float base = r.top + (110 + 52 * i) * k, mid = base - Ui.cap(cardText) / 2;
+            float tagW = cardTag.measureText(HomeData.SHORT[i]);
+            cardTag.setColor(tone(L_DIM, 0xCCFFFFFF));
+            c.drawText(HomeData.SHORT[i], x + 4 * k, base, cardTag);
+            c.drawText(HomeData.COIN_NAMES[i], x + Math.max(tagW, 28 * k) + 22 * k, base, cardText);
             c.drawText(HomeData.brl(data.prices[i]), right - 128 * k, base, pricePaint);
             double change = data.changes[i];
             if (Double.isNaN(change)) continue;
@@ -1393,6 +1397,8 @@ final class HomeView extends ViewGroup implements Choreographer.FrameCallback, H
             changePaint.setColor(color);
             c.drawText(HomeData.change(change), tmp.centerX(), mid + Ui.halfCap(changePaint), changePaint);
         }
+        cardTag.setColor(tone(L_FAINT, 0x66FFFFFF));
+        c.drawText(Ui.tr("Spot · convertido por USD/INR", "Spot · converted at USD/INR"), x, r.top + 262 * k, cardTag);
     }
 
     // MARK: - Focus
@@ -1752,6 +1758,7 @@ final class HomeView extends ViewGroup implements Choreographer.FrameCallback, H
                 break;
         }
         retarget(false);
+        sound.move();
     }
 
     private static int nearest(RectF[] rects, float x) {
@@ -1783,10 +1790,12 @@ final class HomeView extends ViewGroup implements Choreographer.FrameCallback, H
         if (next == gridIndex) return;
         gridIndex = next;
         retargetGrid(false);
+        sound.move();
         gridDirty = true;
     }
 
     private void activate() {
+        sound.open();
         HomeApps.Item it;
         RectF r;
         if (sheetOpen) {
@@ -2133,6 +2142,7 @@ final class HomeView extends ViewGroup implements Choreographer.FrameCallback, H
                 return false;
         }
         retarget(false);
+        sound.move();
         return true;
     }
 
