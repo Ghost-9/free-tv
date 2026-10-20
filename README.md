@@ -76,6 +76,15 @@ Netflix does not expose per-profile recommendations to third-party apps, and the
 
 If Netflix or JustWatch changes the endpoint, the rail falls back to its last cache and then to a quiet message; the rest of the home screen is unaffected.
 
+## FigCraft UI kit
+
+<img src="docs/design/ui-kit-contact.png" width="880" alt="Free TV UI kit: 12 screens and states">
+
+Twelve screens and states — home, rail focus, app focus, drawer, all apps, settings, home choice, sound
+picker, screensaver, markets, offline and restore — plus five homepage directions and five app-rail
+designs. All in three FigCraft-importable SVGs with named layers and embedded art:
+[`docs/design/`](docs/design/).
+
 ## Design directions
 
 <img src="docs/designs/contact-sheet.webp" width="880" alt="Five Free TV homepage directions">
