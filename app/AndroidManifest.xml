@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.freemytv"
-    android:versionCode="1"
-    android:versionName="1.0">
+    android:versionCode="4"
+    android:versionName="1.2.1">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -42,7 +42,7 @@
     <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
 
     <application
-        android:label="Free My TV"
+        android:label="Free TV"
         android:icon="@drawable/icon"
         android:banner="@drawable/banner"
         android:allowBackup="false"
@@ -51,9 +51,9 @@
         <!-- The app's icon opens the settings (switch between Free My TV and the original home screen). -->
         <activity
             android:name=".SettingsActivity"
-            android:process=":home"
+            android:process=":settings"
             android:exported="true"
-            android:label="Free My TV"
+            android:label="Free TV"
             android:launchMode="singleTask"
             android:taskAffinity="io.freemytv.settings"
             android:excludeFromRecents="true"
@@ -73,7 +73,7 @@
             android:name=".HomeActivity"
             android:process=":home"
             android:exported="true"
-            android:label="Free My TV"
+            android:label="Free TV"
             android:launchMode="singleTask"
             android:taskAffinity=""
             android:stateNotNeeded="true"
@@ -94,7 +94,7 @@
             android:name=".Screensaver"
             android:process=":home"
             android:exported="true"
-            android:label="Free My TV"
+            android:label="Free TV"
             android:permission="android.permission.BIND_DREAM_SERVICE">
             <intent-filter>
                 <action android:name="android.service.dreams.DreamService" />

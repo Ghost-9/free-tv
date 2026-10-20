@@ -1,0 +1,84 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,"Inter",system-ui,sans-serif;color:var(--foreground,#e8e8ea);font-size:14px;line-height:1.4}
+.wrap{max-width:820px;margin:0 auto;padding:4px 0 16px}
+.eyebrow{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted-foreground,#9a9aa2);font-weight:700;margin-bottom:10px}
+h1{font-size:34px;letter-spacing:-.035em;font-weight:650;margin:0 0 8px}
+.lede{color:var(--muted-foreground,#b9b9c0);max-width:64ch;margin:0 0 8px}
+.note{font-size:12px;color:var(--muted-foreground,#9a9aa2);margin:0 0 16px}
+.list{border-top:1px solid var(--border,#2c2c31)}
+.row{display:grid;grid-template-columns:230px 1fr 56px 64px;gap:14px;align-items:center;padding:9px 0;border-bottom:1px solid var(--border,#2c2c31)}
+@media(max-width:620px){.row{grid-template-columns:1fr 60px} .wave,.dur{display:none}}
+.name{font-weight:600;font-size:14px}
+.role{font-size:9.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted-foreground,#9a9aa2);border:1px solid var(--border,#3a3a42);border-radius:99px;padding:1px 6px;margin-left:4px;font-weight:600}
+.desc{font-size:11.5px;color:var(--muted-foreground,#9a9aa2);margin-top:1px}
+.wave{display:flex;align-items:center;gap:2px;height:36px}
+.wave i{display:block;width:4px;border-radius:1px;background:var(--accent,#8ab4f8);opacity:.7}
+.dur{font-size:11px;color:var(--muted-foreground,#9a9aa2);text-align:right;font-variant-numeric:tabular-nums}
+.play{height:32px;border-radius:99px;border:1px solid var(--border,#3a3a42);background:var(--secondary,rgba(255,255,255,.07));color:var(--foreground,#e8e8ea);font-size:12px;font-weight:600;cursor:pointer}
+.play:active{transform:scale(.97)}
+.foot{margin-top:14px;font-size:11.5px;color:var(--muted-foreground,#9a9aa2)}
+code{font-family:ui-monospace,Menlo,monospace;font-size:.92em}
+</style></head><body><div class="wrap">
+<div class="eyebrow">Free TV · sound lab</div>
+<h1>Ten UI sounds, made for the TV.</h1>
+<p class="lede">Short, low-volume, no high-frequency bite. 48 kHz mono; files in <code>app/assets/sounds/</code>.
+Recommended pairing: <b>Tick Soft</b> for focus, <b>Glass Ping</b> for open.</p>
+<p class="note">Peak-normalised to −12 dBFS; on the TV they will feel quieter than on a phone. Click Play to audition.</p>
+<div class="list"><div class="row">
+      <div class="meta"><div class="name">Tick Soft <span class="role">focus</span></div><div class="desc">The safe default: almost subliminal on focus.</div></div>
+      <div class="wave"><i style="height:6px"></i><i style="height:34px"></i><i style="height:29px"></i><i style="height:20px"></i><i style="height:13px"></i><i style="height:9px"></i><i style="height:6px"></i><i style="height:4px"></i><i style="height:3px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i></div>
+      <div class="dur">45 ms</div>
+      <button class="play" onclick="play('01-tick-soft.wav',this)">Play</button>
+    </div><div class="row">
+      <div class="meta"><div class="name">Tock Low <span class="role">focus</span></div><div class="desc">Warm and muted; best for moving along the shelf.</div></div>
+      <div class="wave"><i style="height:15px"></i><i style="height:34px"></i><i style="height:27px"></i><i style="height:19px"></i><i style="height:16px"></i><i style="height:12px"></i><i style="height:9px"></i><i style="height:6px"></i><i style="height:4px"></i><i style="height:3px"></i><i style="height:3px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i></div>
+      <div class="dur">60 ms</div>
+      <button class="play" onclick="play('02-tock-low.wav',this)">Play</button>
+    </div><div class="row">
+      <div class="meta"><div class="name">Wood Tap <span class="role">focus</span></div><div class="desc">Dry acoustic tap; a little more character.</div></div>
+      <div class="wave"><i style="height:11px"></i><i style="height:34px"></i><i style="height:28px"></i><i style="height:18px"></i><i style="height:14px"></i><i style="height:10px"></i><i style="height:8px"></i><i style="height:6px"></i><i style="height:5px"></i><i style="height:3px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i></div>
+      <div class="dur">55 ms</div>
+      <button class="play" onclick="play('03-wood-tap.wav',this)">Play</button>
+    </div><div class="row">
+      <div class="meta"><div class="name">Glass Ping <span class="role">open</span></div><div class="desc">Bright but short; good for opening a title.</div></div>
+      <div class="wave"><i style="height:34px"></i><i style="height:30px"></i><i style="height:25px"></i><i style="height:19px"></i><i style="height:15px"></i><i style="height:11px"></i><i style="height:9px"></i><i style="height:6px"></i><i style="height:5px"></i><i style="height:5px"></i><i style="height:4px"></i><i style="height:3px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i></div>
+      <div class="dur">160 ms</div>
+      <button class="play" onclick="play('04-glass-ping.wav',this)">Play</button>
+    </div><div class="row">
+      <div class="meta"><div class="name">Marimba <span class="role">confirm</span></div><div class="desc">The most musical; use rarely, on confirm.</div></div>
+      <div class="wave"><i style="height:34px"></i><i style="height:33px"></i><i style="height:29px"></i><i style="height:24px"></i><i style="height:20px"></i><i style="height:16px"></i><i style="height:13px"></i><i style="height:11px"></i><i style="height:9px"></i><i style="height:8px"></i><i style="height:7px"></i><i style="height:5px"></i><i style="height:4px"></i><i style="height:3px"></i><i style="height:3px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i></div>
+      <div class="dur">220 ms</div>
+      <button class="play" onclick="play('05-marimba.wav',this)">Play</button>
+    </div><div class="row">
+      <div class="meta"><div class="name">Water Drop <span class="role">open</span></div><div class="desc">Soft downward sweep; calm.</div></div>
+      <div class="wave"><i style="height:34px"></i><i style="height:33px"></i><i style="height:26px"></i><i style="height:23px"></i><i style="height:19px"></i><i style="height:16px"></i><i style="height:15px"></i><i style="height:14px"></i><i style="height:12px"></i><i style="height:10px"></i><i style="height:9px"></i><i style="height:6px"></i><i style="height:7px"></i><i style="height:6px"></i><i style="height:5px"></i><i style="height:4px"></i><i style="height:4px"></i><i style="height:3px"></i><i style="height:2px"></i><i style="height:3px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i></div>
+      <div class="dur">140 ms</div>
+      <button class="play" onclick="play('06-water-drop.wav',this)">Play</button>
+    </div><div class="row">
+      <div class="meta"><div class="name">Soft Pop <span class="role">focus</span></div><div class="desc">Round, quiet, no high frequency.</div></div>
+      <div class="wave"><i style="height:26px"></i><i style="height:27px"></i><i style="height:34px"></i><i style="height:24px"></i><i style="height:14px"></i><i style="height:15px"></i><i style="height:11px"></i><i style="height:5px"></i><i style="height:6px"></i><i style="height:4px"></i><i style="height:2px"></i><i style="height:3px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i></div>
+      <div class="dur">45 ms</div>
+      <button class="play" onclick="play('07-soft-pop.wav',this)">Play</button>
+    </div><div class="row">
+      <div class="meta"><div class="name">Paper Tick <span class="role">focus</span></div><div class="desc">Textural and very short; good for fast browsing.</div></div>
+      <div class="wave"><i style="height:34px"></i><i style="height:27px"></i><i style="height:23px"></i><i style="height:11px"></i><i style="height:7px"></i><i style="height:5px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i></div>
+      <div class="dur">40 ms</div>
+      <button class="play" onclick="play('08-paper-tick.wav',this)">Play</button>
+    </div><div class="row">
+      <div class="meta"><div class="name">Double Tick <span class="role">confirm</span></div><div class="desc">Two steps: focus + select in one gesture.</div></div>
+      <div class="wave"><i style="height:34px"></i><i style="height:27px"></i><i style="height:11px"></i><i style="height:4px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:24px"></i><i style="height:19px"></i><i style="height:8px"></i><i style="height:3px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i></div>
+      <div class="dur">100 ms</div>
+      <button class="play" onclick="play('09-double-tick.wav',this)">Play</button>
+    </div><div class="row">
+      <div class="meta"><div class="name">Chime <span class="role">open</span></div><div class="desc">Longest; open or confirm only.</div></div>
+      <div class="wave"><i style="height:34px"></i><i style="height:33px"></i><i style="height:31px"></i><i style="height:26px"></i><i style="height:21px"></i><i style="height:18px"></i><i style="height:15px"></i><i style="height:13px"></i><i style="height:11px"></i><i style="height:9px"></i><i style="height:8px"></i><i style="height:7px"></i><i style="height:6px"></i><i style="height:5px"></i><i style="height:4px"></i><i style="height:4px"></i><i style="height:3px"></i><i style="height:3px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i><i style="height:2px"></i></div>
+      <div class="dur">340 ms</div>
+      <button class="play" onclick="play('10-chime.wav',this)">Play</button>
+    </div></div>
+<p class="foot">Built on Free My TV (MIT). Sounds generated locally; no sampled material.</p>
+</div><script>
+let cur=null;
+function play(src,btn){ if(cur) cur.pause(); cur=new Audio(src); cur.volume=.9; cur.play().catch(()=>{}); }
+</script></body></html>

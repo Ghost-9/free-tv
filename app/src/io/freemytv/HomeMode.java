@@ -45,17 +45,21 @@ final class HomeMode {
     static final String GOOGLE_SETUP = "com.google.android.tungsten.setupwraith";
 
     /**
-     * Turned off in Free My TV mode, when the TV has them. Google extras first, then TV-maker extras (TCL here; add
-     * your brand's, see the README). The TV's own home screen and screensaver are added at switch time.
+     * Turned off in Free My TV mode, when the TV has them. Google extras first, then the Acer R10G (Realtek
+     * rtd6748) extras. The TV's own home screen and screensaver are added at switch time.
      */
     static final String[] DEBLOAT = {
         "com.google.android.play.games", "com.google.android.youtube.tvmusic",        // Play Games, YouTube Music
-        // TCL
-        "com.tcl.magiconnectfree", "com.tcl.miracast",                                // screen mirroring apps
-        "com.tcl.waterfall.overseas", "com.tcl.channelplus",                          // TCL Channel and its Live TV
-        "com.tcl.messagebox", "com.tcl.usercenter",                                   // TCL messages and account
-        "com.tcl.exhibit", "com.tcl.esticker", "com.tcl.hotelmenu",                   // store demo, hotel menu
-        "com.tcl.repairguide", "com.tcl.ocean.instructions", "com.tcl.logkit",        // repair guide, manual, logs
+        // Acer R10G / Realtek rtd6748
+        "com.apps.biz.ds",                              // M Sign: digital-signage player
+        "com.apps.biz.mt",                              // Meeting Mode: meeting-room sign-in
+        "com.seraphic.media.tv.interactive.app",        // ACR: content recognition for targeted ads
+        "com.apps.esticker3",                           // Esticker2: promo stickers
+        "com.apps.mk.gameui",                           // game overlay
+        "com.apps.factory.ui",                          // factory test menu
+        "com.apps.usbmediaplayer", "com.apps.virtualkey", "com.apps.fivekey",
+        "com.apps.bluetoothremote",                     // legacy input helpers, unused with the stock remote
+        "com.realtek.kara", "com.realtek.karaoke.userguide",  // karaoke
     };
 
     /** The voice assistant, only with disable_assistant=true in config.properties (the mic button stops working). */
@@ -63,11 +67,19 @@ final class HomeMode {
 
     /** Never turned off, not even by mistake (picture, sound, inputs, remote, store). Checked before every disable. */
     private static final Set<String> PROTECTED = new HashSet<>(Arrays.asList(
-        "com.tcl.ttvs", "com.tvos", "com.tcl.systemserver", "com.tcl.systemui.plugin", "com.tcl.tv", "com.tcl.tvinput",
-        "com.tcl.hearaid", "com.dolby.android.audio.service", "com.tcl.globalkeyoverlay", "com.tcl.autopair",
-        "com.tcl.UpdatePeripheral", "com.tcl.dashboard", "com.tcl.suspension", "com.tcl.providers.config",
-        "com.tcl.gamebar", "com.tcl.airplay2", "com.mirakulo.astrotv.service", "com.tcl.initsetup",
-        "com.tcl.useragreement", "com.tcl.factory.view", "com.tcl.guard", "com.tcl.t_solo",
+        // Picture, sound, inputs, remote, tuner, power, updates: the Acer/Realtek system.
+        "com.realtek.tv", "com.realtek.dtv", "com.realtek.tv.atsc", "com.realtek.tv.isdb", "com.realtek.dtmb",
+        "com.realtek.systemservice", "com.realtek.power", "com.realtek.energymode", "com.realtek.statusbar",
+        "com.realtek.display.monitor", "com.realtek.globalkeyhandler", "com.realtek.android.tv.globalkeyoverlay",
+        "com.realtek.secservice", "com.realtek.hw.configprovider", "com.realtek.frameworkoverlay",
+        "com.realtek.slices", "com.realtek.media.notification", "com.realtek.connecteddevices",
+        "com.realtek.tv.passthrough", "com.realtek.airplay2", "com.realtek.mdnsoffload",
+        "com.realtek.leanbacklauncher.partnercustomizer",
+        "com.apps.puresound", "com.apps.tvmanager", "com.apps.scast", "com.apps.plugins", "com.apps.ota",
+        "com.apps.authota", "com.apps.sys", "com.apps.wifihotspot", "com.apps.function.audiolink",
+        "com.apps.function.gdpr", "com.apps.secserviceoverlay", "com.usc.scmanager.moka",
+        "com.mk.tv.caption", "com.mk.tv.gallery", "com.google.android.partnersetup", "com.realsil.ota",
+        "com.dolby.android.audio.service",
         "com.google.android.gms", "com.google.android.gsf", "com.android.vending", "com.google.android.apps.mediashell",
         "com.google.android.tv.remote.service", "com.google.android.inputmethod.latin", "com.google.android.webview",
         "com.android.tv.settings", "com.android.systemui", "android", PKG));
@@ -147,15 +159,15 @@ final class HomeMode {
             s.put("mode", FREE).put("since", System.currentTimeMillis()).put("homeReverted", false)
                     .put("disabled", new JSONArray(sorted(disabled)));
             save(c, s);
-            notice(c, Ui.tr("Free My TV ligado: Início e tela de descanso novos, " + disabled.size() + " apps desligados.",
-                    "Free My TV is on: new home screen and screensaver, " + disabled.size() + " apps turned off."));
+            notice(c, Ui.tr("Free TV ligado: Início e tela de descanso novos, " + disabled.size() + " apps desligados.",
+                    "Free TV is on: new home screen and screensaver, " + disabled.size() + " apps turned off."));
             busy(c, Ui.tr("Medindo o Free My TV…", "Measuring Free My TV…"));
             measureHomeTime(c, adb, FREE);
             done(c, null);
             adb.shell("am start -a android.intent.action.MAIN -c android.intent.category.HOME");
             ModeJob.schedule(c, ModeJob.MEMORY, FREE, 120_000);
         } catch (Exception e) {
-            done(c, Ui.tr("Não deu para ligar o Free My TV: ", "Couldn't turn on Free My TV: ") + e.getMessage());
+            done(c, Ui.tr("Não deu para ligar o Free TV: ", "Couldn't turn on Free TV: ") + e.getMessage());
         }
     }
 
@@ -231,8 +243,8 @@ final class HomeMode {
                 }
                 s.put("homeReverted", true).put("disabled", kept);
                 save(app, s);
-                notice(app, Ui.tr("O Início do Free My TV caiu 3 vezes seguidas; voltei para o Início original.",
-                        "Free My TV's home screen crashed 3 times in a row; I switched back to the original one."));
+                notice(app, Ui.tr("O Início do Free TV caiu 3 vezes seguidas; voltei para o Início original.",
+                        "Free TV's home screen crashed 3 times in a row; I switched back to the original one."));
                 adb.shell("am start -a android.intent.action.MAIN -c android.intent.category.HOME");
             } catch (Exception e) {
                 AppLog.w("could not give the home screen back: " + e.getMessage());
@@ -289,14 +301,14 @@ final class HomeMode {
                 latest.put("disabled", new JSONArray(sorted(disabled)));
                 save(app, latest);
             } catch (Exception e) {
-                notice(app, Ui.tr("Não consegui conferir o Free My TV: ", "Couldn't check Free My TV: ") + e.getMessage());
+                notice(app, Ui.tr("Não consegui conferir o Free TV: ", "Couldn't check Free TV: ") + e.getMessage());
                 return;
             }
             if (!fixed.isEmpty()) {
                 notice(app, (updated ? Ui.tr("A atualização da TV religou ", "The TV update turned back on ")
                         : Ui.tr("Desliguei o que faltava: ", "Turned off what was missing: ")) + String.join(", ", fixed) + ".");
             } else if (updated) {
-                notice(app, Ui.tr("A TV foi atualizada; o Free My TV continua igual.", "The TV was updated; Free My TV is still on."));
+                notice(app, Ui.tr("A TV foi atualizada; o Free TV continua igual.", "The TV was updated; Free TV is still on."));
             }
         }
     }

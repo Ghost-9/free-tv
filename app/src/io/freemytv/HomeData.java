@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,16 +25,16 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * Crypto prices (Binance, every 5 min) and weather/sunrise/sunset for your location (Open-Meteo, every 30 min), cached
- * so the screen opens with numbers. Only fetched while the home screen or the screensaver is visible (the screen asks).
- * Neither source needs a key. Location and currency come from config.properties.
+ * Indian markets (Nifty 50, gold and silver via Yahoo's chart endpoint, every 5 min) and weather/sunrise/sunset for
+ * your location (Open-Meteo, every 30 min), cached so the screen opens with numbers. Only fetched while the home screen
+ * or the screensaver is visible. Neither source needs a key.
  */
 final class HomeData {
-    static final String[] COINS = {"BTC", "ETH", "SOL", "USDT"};
-    static final String[] COIN_NAMES = {"Bitcoin", "Ethereum", "Solana", "Dollar"};
+    static final String[] COINS = {"NIFTY", "GOLD", "SILVER"};
+    static final String[] SHORT = {"N", "Au", "Ag"};
+    static final String[] COIN_NAMES = {"Nifty 50", "Gold 24k /10g", "Silver /kg"};
     private static final String CURRENCY = Config.CURRENCY.trim().toUpperCase(Locale.ROOT);
-    /** Binance quotes dollars as USDT. */
-    private static final String QUOTE = CURRENCY.equals("USD") ? "USDT" : CURRENCY;
+    private static final double TROY_OUNCE = 31.1034768;
     private static final String WEATHER_URL = "https://api.open-meteo.com/v1/forecast?latitude=" + Config.LATITUDE
             + "&longitude=" + Config.LONGITUDE
             + "&current=temperature_2m,weather_code,is_day&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset"
@@ -43,19 +44,12 @@ final class HomeData {
 
     interface Listener { void onData(); }
 
-    /** BTC, ETH and SOL; in Brazilian reais also the dollar (USDT/BRL), which Binance doesn't list for most currencies. */
     static int coinCount() {
-        return CURRENCY.equals("BRL") ? COINS.length : 3;
+        return 3;
     }
 
     static String coinName(int i) {
-        return i == 3 ? Ui.tr("Dólar", "Dollar") : COIN_NAMES[i];
-    }
-
-    private static String pricesUrl() {
-        StringBuilder symbols = new StringBuilder();
-        for (int i = 0; i < coinCount(); i++) symbols.append(i == 0 ? "" : ",").append("%22").append(COINS[i]).append(QUOTE).append("%22");
-        return "https://api.binance.com/api/v3/ticker/24hr?type=MINI&symbols=%5B" + symbols + "%5D";
+        return COIN_NAMES[i];
     }
 
     static final class Weather {
@@ -95,9 +89,9 @@ final class HomeData {
             String p = cache.getString("prices", null);
             if (p != null) parsePrices(p);
             pricesAt = cache.getLong("pricesAt", 0);
-            String w = cache.getString("weather", null);
+            String w = cache.getString("weather_" + Config.CITY, null);
             if (w != null) weather = parseWeather(w);
-            weatherAt = cache.getLong("weatherAt", 0);
+            weatherAt = cache.getLong("weatherAt_" + Config.CITY, 0);
         } catch (Exception ignored) {}
     }
 
@@ -112,13 +106,10 @@ final class HomeData {
             fetchingPrices = true;
             io.execute(() -> {
                 try {
-                    String body = get(pricesUrl());
-                    parsePrices(body);
-                    pricesAt = System.currentTimeMillis();
-                    cache.edit().putString("prices", body).putLong("pricesAt", pricesAt).apply();
+                    fetchMarkets();
                     notifyListeners();
                 } catch (Exception e) {
-                    AppLog.w("prices: " + e.getMessage());
+                    AppLog.w("markets: " + e.getMessage());
                 } finally {
                     fetchingPrices = false;
                 }
@@ -131,7 +122,7 @@ final class HomeData {
                     String body = get(WEATHER_URL);
                     weather = parseWeather(body);
                     weatherAt = System.currentTimeMillis();
-                    cache.edit().putString("weather", body).putLong("weatherAt", weatherAt).apply();
+                    cache.edit().putString("weather_" + Config.CITY, body).putLong("weatherAt_" + Config.CITY, weatherAt).apply();
                     notifyListeners();
                 } catch (Exception e) {
                     AppLog.w("weather: " + e.getMessage());
@@ -146,23 +137,58 @@ final class HomeData {
         main.post(() -> { for (Listener l : new ArrayList<>(listeners)) l.onData(); });
     }
 
+    /** Nifty 50 is direct; gold and silver are USD/oz converted at USD/INR (24k, per 10 g and per kg). */
+    private void fetchMarkets() throws Exception {
+        Quote nifty = chart("^NSEI");
+        Quote gold = chart("GC=F");
+        Quote silver = chart("SI=F");
+        Quote fx = chart("INR=X");
+
+        double[] p = new double[3];
+        double[] c = new double[3];
+        p[0] = nifty.price;
+        c[0] = nifty.change();
+        p[1] = gold.price * fx.price / TROY_OUNCE * 10;
+        double prevGold = gold.previous * fx.previous / TROY_OUNCE * 10;
+        c[1] = prevGold > 0 ? (p[1] / prevGold - 1) * 100 : Double.NaN;
+        p[2] = silver.price * fx.price / TROY_OUNCE * 1000;
+        double prevSilver = silver.previous * fx.previous / TROY_OUNCE * 1000;
+        c[2] = prevSilver > 0 ? (p[2] / prevSilver - 1) * 100 : Double.NaN;
+
+        JSONObject o = new JSONObject();
+        JSONArray pa = new JSONArray(), ca = new JSONArray();
+        for (int i = 0; i < 3; i++) { pa.put(p[i]); ca.put(c[i]); }
+        o.put("prices", pa).put("changes", ca);
+        String body = o.toString();
+        parsePrices(body);
+        pricesAt = System.currentTimeMillis();
+        cache.edit().putString("prices", body).putLong("pricesAt", pricesAt).apply();
+    }
+
+    private static final class Quote {
+        double price, previous;
+        double change() { return previous > 0 ? (price / previous - 1) * 100 : Double.NaN; }
+    }
+
+    private static Quote chart(String symbol) throws Exception {
+        String url = "https://query1.finance.yahoo.com/v8/finance/chart/"
+                + URLEncoder.encode(symbol, "UTF-8") + "?interval=1d&range=5d";
+        JSONObject root = new JSONObject(get(url));
+        JSONObject meta = root.getJSONObject("chart").getJSONArray("result").getJSONObject(0).getJSONObject("meta");
+        Quote q = new Quote();
+        q.price = meta.getDouble("regularMarketPrice");
+        q.previous = meta.optDouble("chartPreviousClose", q.price);
+        return q;
+    }
+
+    /** Cached market snapshot: {"prices":[nifty,gold,silver],"changes":[..]}. */
     private void parsePrices(String body) throws Exception {
-        JSONArray list = new JSONArray(body);
-        String quote = QUOTE;
-        int found = 0;
-        for (int i = 0; i < list.length(); i++) {
-            JSONObject o = list.getJSONObject(i);
-            String symbol = o.getString("symbol");
-            for (int k = 0; k < COINS.length; k++) {
-                if (!symbol.equals(COINS[k] + quote)) continue;
-                found++;
-                double last = Double.parseDouble(o.optString("lastPrice", o.optString("price", "NaN")));
-                double open = Double.parseDouble(o.optString("openPrice", "NaN"));
-                prices[k] = last;
-                changes[k] = open > 0 ? (last - open) / open * 100 : Double.NaN;
-            }
+        JSONObject o = new JSONObject(body);
+        JSONArray p = o.getJSONArray("prices"), c = o.getJSONArray("changes");
+        for (int i = 0; i < 3 && i < p.length(); i++) {
+            prices[i] = p.getDouble(i);
+            changes[i] = c.optDouble(i, Double.NaN);
         }
-        if (found == 0) pricesAt = 0;   // cached in another currency (config changed): fetch again
     }
 
     private static Weather parseWeather(String body) throws Exception {
@@ -207,7 +233,7 @@ final class HomeData {
         HttpURLConnection c = (HttpURLConnection) new URL(url).openConnection();
         c.setConnectTimeout(6000);
         c.setReadTimeout(6000);
-        c.setRequestProperty("User-Agent", "FreeMyTV");
+        c.setRequestProperty("User-Agent", "FreeTV/1.2");
         try {
             if (c.getResponseCode() != 200) throw new IOException("HTTP " + c.getResponseCode());
             try (InputStream in = c.getInputStream()) {
@@ -236,7 +262,7 @@ final class HomeData {
     // MARK: - Formatting
 
     private static Locale locale() {
-        return Ui.en ? Locale.US : PT;
+        return "INR".equals(CURRENCY) ? new Locale("en", "IN") : (Ui.en ? Locale.US : PT);
     }
 
     /** 580.4k · 21.0k · 1.04k · 5.61 (as short as possible; the dollar always with cents). */
@@ -256,11 +282,10 @@ final class HomeData {
         return String.format(locale(), "%.2f", v);
     }
 
-    /** $108,234 · $185.20 · R$ 581.234 · R$ 5,61 (cents only below a thousand), in the configured currency. */
+    /** ₹22,889 · ₹1,26,970 · ₹1,74,600: Indian grouping, no cents above a thousand. */
     static String brl(double v) {
-        String symbol = currencySymbol();
-        if (Double.isNaN(v)) return symbol + "—";
-        return v >= 1000 ? String.format(locale(), symbol + "%,.0f", v) : String.format(locale(), symbol + "%.2f", v);
+        if (Double.isNaN(v)) return "₹—";
+        return v >= 1000 ? String.format(locale(), "₹%,.0f", v) : String.format(locale(), "₹%.2f", v);
     }
 
     /** The weather in words, from Open-Meteo's WMO code. */

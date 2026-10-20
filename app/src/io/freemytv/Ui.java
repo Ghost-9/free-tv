@@ -25,6 +25,8 @@ final class Ui {
     static final Locale PT = new Locale("pt", "BR");
     /** English or Portuguese, from config.properties ("language") or, with "auto", the TV's own language. */
     static volatile boolean en = english();
+    /** 24-hour clock, from Settings; default true on TV. */
+    static volatile boolean clock24 = true;
     static Typeface thin, light, displayMedium, displaySemibold, regular, medium, semibold;
     private static boolean loaded;
     private static final Rect BOUNDS = new Rect();
@@ -126,6 +128,7 @@ final class Ui {
 
     /** "21:47" (in English, "9:47", like the iPhone in the US). */
     static String clock(long now) {
+        if (clock24) return new SimpleDateFormat("HH:mm", Locale.US).format(new Date(now));
         return en ? new SimpleDateFormat("h:mm", Locale.US).format(new Date(now))
                 : new SimpleDateFormat("HH:mm", PT).format(new Date(now));
     }

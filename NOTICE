@@ -1,0 +1,25 @@
+Free TV
+Copyright (c) 2026 Mayank Batra / Avartana Labs
+
+This product is a derivative work of Free My TV
+(https://github.com/simbasjungles/free-my-tv), Copyright (c) 2026 Free My TV
+contributors, licensed under the MIT License. The original copyright notice
+and licence text are retained in LICENSE. The upstream project supplied the
+home-screen design, the switching model and the safety watchdog; this fork
+adds the Acer R10G / Realtek profile, the Netflix rail, the retention fix and
+the Free TV branding.
+
+Third-party material:
+- Inter font, SIL Open Font License 1.1 (assets/fonts, OFL.txt).
+- Material Symbols icons, Apache License 2.0 (assets/symbols).
+- cryptocurrency-icons, CC0 (coin logos in assets).
+- Popularity data from JustWatch, fetched at runtime; not redistributed.
+- Netflix title links and posters, fetched at runtime from the provider and
+  its image CDN; not redistributed. Netflix is a trademark of Netflix, Inc.
+- Weather by Open-Meteo (CC BY 4.0), prices by Binance public API, fetched at
+  runtime.
+- UI sounds generated locally for this project; released under CC0.
+
+Free TV is not affiliated with, endorsed by, or sponsored by Netflix,
+Google, Acer, Realtek or JustWatch. Android TV and Google TV are trademarks of
+Google LLC.
