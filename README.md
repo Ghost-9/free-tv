@@ -31,7 +31,7 @@ It is built on **[Free My TV](https://github.com/simbasjungles/free-my-tv)** by 
 - **A drawer that earns its place.** Live TV, HDMI inputs, All Apps, Home Settings, TV Settings, the full weather and crypto cards.
 - **No ads, no analytics, no accounts.** Three permissions: internet, network state, boot completed. No tracking SDK, no library, no Gradle.
 - **One button back.** *Original* restores the factory home screen, screensaver and every app it turned off, without uninstalling anything.
-- **Two quiet sounds, chosen.** 01 Tick Soft on focus and 04 Glass Ping on open; the other eight live in [`sound-lab/`](sound-lab) for a future picker.
+- **Ten sounds, chosen.** Focus and Open are separate: pick any of the ten in Settings, preview as you move, or mute both. 01 Tick Soft / 04 Glass Ping by default.
 
 ## Measured, not claimed
 

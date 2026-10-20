@@ -11,7 +11,7 @@ generic fixes back.
 
 ## Weather city
 
-`Delhi, India` — `28.6519, 77.2315`, `Asia/Kolkata`, `en`, `IN`, `USD` for the Binance ticker
+`Jodhpur, India` — `26.2389, 73.0243`, `Asia/Kolkata`, `en`, `IN`, `USD` for the Binance ticker
 (Binance has no INR pair; `INR` returns HTTP 400). These live in `config.properties`, which is
 git-ignored. The coordinates were cross-checked against the network's public geolocation and are
 approximate; edit `config.properties` and rebuild if the TV is somewhere else.
@@ -25,7 +25,7 @@ approximate; edit `config.properties` and rebuild if the TV is somewhere else.
 - `HomeView`: without a recommendation key, say so instead of drawing three empty cards.
 - `app/assets/logos/youtube.png`, `youtube-dark.png`, `smarttube.png`: transparent marks; the banner
   extraction was cropping YouTube and shrinking SmartTube.
-- The synthesized click was removed entirely. Ten replacement sounds live in `sound-lab/`; 01 Tick Soft (focus) and 04 Glass Ping (open) are wired in `res/raw`.
+- The synthesized click was removed entirely. Ten replacement sounds live in `sound-lab/` and `res/raw`; Settings picks Focus and Open separately, previews on move, and can mute both. 01 Tick Soft / 04 Glass Ping are the defaults.
 - Keyless **Popular on Netflix** rail via JustWatch (`NetflixRail.java`), with direct
   `netflix.com/title/<id>` links and a weekly cache.
 - Settings retention fix: Settings runs in its own `:settings` process, `Scene.release()` on exit and

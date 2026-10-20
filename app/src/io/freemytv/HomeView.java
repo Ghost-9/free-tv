@@ -311,10 +311,11 @@ final class HomeView extends ViewGroup implements Choreographer.FrameCallback, H
         for (int i = 0; i < nfFocus.length; i++) nfFocus[i] = new Spring(0.3f, 0.8f, 0);
         nfRail = new NetflixRail(a, () -> { retarget(false); heroLayer.invalidate(); });
         nfRail.start();
+        Ui.clock24 = Prefs.clock24(a);
         recs.setLight(true);
         checkNight(false);
         sheetLayer.setVisibility(INVISIBLE);
-        scene.setMotion(0.6f, 0f);
+        scene.setMotion(Prefs.reducedMotion(a) ? 0f : 0.6f, 0f);
         updatePalette();
         // First time: right away (a cold start opens with the apps already there); missing logos come from reload().
         setShelf(HomeApps.shelf(a, false));
@@ -327,6 +328,8 @@ final class HomeView extends ViewGroup implements Choreographer.FrameCallback, H
     void resume() {
         if (running) return;
         running = true;
+        Ui.clock24 = Prefs.clock24(getContext());
+        scene.setMotion(Prefs.reducedMotion(getContext()) ? 0f : 0.6f, 0f);
         checkNight(false);
         resumedAt = SystemClock.uptimeMillis();
         lastNanos = 0;

@@ -89,9 +89,9 @@ final class HomeData {
             String p = cache.getString("prices", null);
             if (p != null) parsePrices(p);
             pricesAt = cache.getLong("pricesAt", 0);
-            String w = cache.getString("weather", null);
+            String w = cache.getString("weather_" + Config.CITY, null);
             if (w != null) weather = parseWeather(w);
-            weatherAt = cache.getLong("weatherAt", 0);
+            weatherAt = cache.getLong("weatherAt_" + Config.CITY, 0);
         } catch (Exception ignored) {}
     }
 
@@ -122,7 +122,7 @@ final class HomeData {
                     String body = get(WEATHER_URL);
                     weather = parseWeather(body);
                     weatherAt = System.currentTimeMillis();
-                    cache.edit().putString("weather", body).putLong("weatherAt", weatherAt).apply();
+                    cache.edit().putString("weather_" + Config.CITY, body).putLong("weatherAt_" + Config.CITY, weatherAt).apply();
                     notifyListeners();
                 } catch (Exception e) {
                     AppLog.w("weather: " + e.getMessage());
